@@ -75,10 +75,10 @@ class Publication:
       else:
         names += name
       
-      #if i == len(self.authors) - 2:
-      #  names += " and "
-      #elif i < len(self.authors) - 1:
-       # names += ", "
+      if i == len(self.authors) - 2:
+        names += ", "
+      elif i < len(self.authors) - 1:
+        names += ", "
 
     return names
 
