@@ -514,8 +514,8 @@ PROJECT_PAGES = {
       publication = [
         Resource(
           icon = FontAwesomeIcons.PDF,
-          path = '../../data/papers/pub1.pdf',
-          name = 'Paper'
+          #path = '../../data/papers/pub1.pdf',
+          name = 'Paper : Our paper is available on IEEE'
         ),
         Resource(
           icon = FontAwesomeIcons.BOOK,
