@@ -463,29 +463,29 @@ ABOUT_ME = AboutMe(
   ]
 )
 
-BIO = '''I'm a fifth year PhD at University of Houston where I'm advised by Dr. David Mayerich. My current research focuses on creating GPU-accelerated algorithms, computational methods for modeling, analyzing and visualizing gigavoxel-scale data. I am also developing computational methods for sparse volumetric microvasculature in OpenVDB optimized with TBB multithreading parallelism. My work is supported by the NSF Graduate Research Fellowship. I received a B.Sc in Electrical and Electronics Enginnering at Chittagong University of Engineering and Technology, where I had the privilege of working with Photonic CrystalFiber.'''
+BIO = '''I'm a fifth year Ph.D. student at University of Houston where I'm advised by Dr. David Mayerich. My current research focuses on creating GPU-accelerated algorithms, computational methods for modeling, analyzing and visualizing gigavoxel-scale data. I am also developing computational methods for sparse volumetric microvasculature in OpenVDB optimized with TBB multithreading parallelism. My work is supported by the NSF Graduate Research Fellowship. I received a B.Sc in Electrical and Electronics Enginnering at Chittagong University of Engineering and Technology, Bangladesh, where I had the privilege of working with Photonic Crystal Fiber.'''
 
 PUBLICATIONS = {
   'pub1': Publication(
-    image =  'data/images/thumbnails/box.png',
-    title =  'Your Project Name 1',
+    image =  'data/images/thumbnails/liver.png',
+    title =  'SEGMENTATION OF MICROVASCULAR NETWORKS EMBEDDED IN GIGAVOXEL 3D IMAGES USING RSF LEVEL SETS WITH OPENVDB',
     url = 'project/pub1',
     authors =  [
       PEOPLE['your-name'],
       PEOPLE['coauthor-name'],
-      PEOPLE['coauthor-name-other']
+      #PEOPLE['W Moree, M Bluhm, J Eriksen, G Chen, D Mayerich']
     ],
-    venue = 'ACM Transactions on Graphics (SIGGRAPH), 2024',
+    venue = '(ISBI 2025) 2025 IEEE International Symposium on Biomedical Imaging',
   ),
   'pub2': Publication(
-    image =  'data/images/thumbnails/glass.png',
-    title =  'Your Project Name 2',
-    url = 'project/pub1',
+    image =  'data/images/thumbnails/KESM.png',
+    title =  'GPU-Accelerated RSF Level Set Evolution for Large-Scale Microvascular Segmentation',
+    url = 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11037869/',
     authors =  [
       PEOPLE['your-name'],
-      PEOPLE['coauthor-name']
+      #PEOPLE['H Goharbavang, T Ahn, EK Alley, JD Wythe, G Chen, D Mayerich']
     ],
-    venue = 'ACM Transactions on Graphics (SIGGRAPH), 2023',
+    venue = 'IEEE Transactions on Visualization and Computer Graphics (Under Review)',
   ),
   'pub3': Publication(
     image =  'data/images/thumbnails/cloud.png',
