@@ -491,7 +491,7 @@ PUBLICATIONS = {
   'pub2': Publication(
     image =  'data/images/thumbnails/KESM.jpg',
     title =  'GPU-Accelerated RSF Level Set Evolution for Large-Scale Microvascular Segmentation',
-    url = 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11037869/',
+    url = 'project/pub2',
     authors =  [
       PEOPLE['your-name'],
       PEOPLE['coauthor-name-other']
@@ -559,6 +559,60 @@ PROJECT_PAGES = {
         Resource(
           icon = FontAwesomeIcons.PDF,
           path = '../../data/papers/pub1.pdf',
+          name = 'Paper'
+        ),
+        Resource(
+          icon = FontAwesomeIcons.BOOK,
+          path = 'https://www.acm.org/',
+          name =  'Publisher\'s Version'
+        ),
+        Resource(
+          icon =  FontAwesomeIcons.ARCHIVE,
+          path =  'https://arxiv.org',
+          name =  'ArXiv Version'
+        )
+      ],
+      code = [
+        Resource(
+          icon =  FontAwesomeIcons.GITHUB,
+          path =  'https://github.com',
+          name = 'Github project with full source code'
+        )
+      ],
+    ),
+    videos = [
+      Video(
+        name =  'presentation slides',
+        id = 'tjYVcOJONdI'
+      )
+    ],
+    #acknowledgements = 'This work was generously supported by XYZ',
+    #citation = '''
+    #@article{
+     # Author:PAPER:2024,
+     # title={Placeholder Title},
+     # volume={42},
+     # ISSN={1557-7368},
+     # url={https://www.arxiv.org},
+     # number={4},
+     # journal={ACM Transactions on Graphics},
+     # publisher={Association for Computing Machinery (ACM)},
+     # authors={YourName}
+     # year={2024},
+     # month=jul, 
+     # pages={1-100}
+   # }'''
+  ),
+  
+  'pub2': Project(
+    image = '../../data/images/KESM.jpg',
+    image_caption = 'Whole brain vasculature imaged using knife edge scanning microscopy (KESM) and available online (kesm.cs.tamu.edu)(a) Reconstruction from 140 slices across the whole brain is shown, along with (b) a 4000×2000×2000 voxel sub-volume with (c-e) several iterated higher-resolution zooms.',
+    abstract = 'Microvascular networks are challenging to reconstruct because they are composed of individual structures near the resolution limit of existing microscopes, making boundary detection difficult. Machine learning tools like convolutional neural networks are effective at semantic segmentation, however they cannot leverage existing information about the global structure of these networks. Level sets are suitable for solving this problem, since they can integrate both the local tube-like structure of capillaries and globally complex topology. However active contours are computationally intensive, making them impractical for terabyte-scale images. We propose a highly parallel formulation of the region-scalable fitting (RSF) model, making it viable for three-dimensional gigavoxel images. We first train a U-Net to provide an initial contour, and then use the proposed RSF model to finalize the segmentation. We tested this approach on microvascular data acquired using multiple state-of-the-art imaging methods. We assess the performance using a Monte-Carlo validation technique and compare results to existing algorithms. This study showcases the practical application of the RSF model, emphasizing its utility in the challenging domain of large-scale high-topology network segmentation with a particular focus on building microvascular models.',
+    resources = ProjectResources(
+      publication = [
+        Resource(
+          icon = FontAwesomeIcons.PDF,
+          path = '../../data/papers/pub2.pdf',
           name = 'Paper'
         ),
         Resource(
