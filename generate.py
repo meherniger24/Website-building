@@ -242,7 +242,7 @@ class Home:
             <h4>Publications</h4>
             <hr/>
             {publications_list}
-            <div class="pb-5">(*, † indicate equal contribution)</div>
+            #<div class="pb-5">(*, † indicate equal contribution)</div>
           </div>
           <div>
             <h4>Teaching</h4>
@@ -473,7 +473,6 @@ PUBLICATIONS = {
     authors =  [
       PEOPLE['your-name'],
       PEOPLE['coauthor-name'],
-      #PEOPLE['W Moree, M Bluhm, J Eriksen, G Chen, D Mayerich']
     ],
     venue = '(ISBI 2025) 2025 IEEE International Symposium on Biomedical Imaging',
   ),
@@ -483,20 +482,9 @@ PUBLICATIONS = {
     url = 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11037869/',
     authors =  [
       PEOPLE['your-name'],
-      #PEOPLE['H Goharbavang, T Ahn, EK Alley, JD Wythe, G Chen, D Mayerich']
       PEOPLE['coauthor-name-other']
     ],
     venue = 'IEEE Transactions on Visualization and Computer Graphics (Under Review)',
-  ),
-  'pub3': Publication(
-    image =  'data/images/thumbnails/cloud.png',
-    title =  'Your Project Name 3',
-    url = 'project/pub1',
-    authors =  [
-      PEOPLE['your-name'],
-      PEOPLE['coauthor-name']
-    ],
-    venue = 'ACM Transactions on Graphics (SIGGRAPH), 2022',
   )
 }
 """
