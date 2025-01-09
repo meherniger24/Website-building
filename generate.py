@@ -448,12 +448,12 @@ ABOUT_ME = AboutMe(
     Resource(
       icon=FontAwesomeIcons.GITHUB,
       name='meherniger24',
-      path='https://github.com'
+      path='https://github.com/meherniger24'
     ),
     Resource(
       icon=FontAwesomeIcons.GRAD_CAP,
       name='Meher Niger',
-      path='https://scholar.google.com'
+      path='https://scholar.google.com/citations?user=VnKZqyIAAAAJ&hl=en&oi=ao'
     ),
     Resource(
       icon=FontAwesomeIcons.FILE,
@@ -463,7 +463,7 @@ ABOUT_ME = AboutMe(
   ]
 )
 
-BIO = '''Add your bio here'''
+BIO = '''I'm a fifth year PhD at University of Houston where I'm advised by Dr. David Mayerich. My current research focuses on creating GPU-accelerated algorithms, computational methods for modeling, analyzing and visualizing gigavoxel-scale data. I am also developing computational methods for sparse volumetric microvasculature in OpenVDB optimized with TBB multithreading parallelism. My work is supported by the NSF Graduate Research Fellowship. I received a B.Sc in Electrical and Electronics Enginnering at Chittagong University of Engineering and Technology, where I had the privilege of working with Photonic CrystalFiber.'''
 
 PUBLICATIONS = {
   'pub1': Publication(
@@ -498,7 +498,7 @@ PUBLICATIONS = {
     venue = 'ACM Transactions on Graphics (SIGGRAPH), 2022',
   )
 }
-
+"""
 COURSES = [
   Course(
     image = 'data/images/thumbnails/class.png',
@@ -515,7 +515,7 @@ COURSES = [
     details = 'CMU, Spring 2021'
   )
 ]
-
+"""
 PROJECT_PAGES = {
   'pub1': Project(
     image = '../../data/images/project.png',
@@ -580,8 +580,9 @@ if __name__ == '__main__':
 
   home = Home(about_me=ABOUT_ME, 
               bio=BIO, 
-              publications=PUBLICATIONS, 
-              courses=COURSES)
+              publications=PUBLICATIONS,  
+              #courses=COURSES)
+              )
   home.generate(directory)
   
   for id, project in PROJECT_PAGES.items():
