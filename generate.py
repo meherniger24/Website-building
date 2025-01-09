@@ -507,9 +507,9 @@ COURSES = [
 """
 PROJECT_PAGES = {
   'pub1': Project(
-    image = '../../data/images/project.png',
-    image_caption = 'placeholder caption',
-    abstract = 'placeholder abstract',
+    image = '../../data/images/liver.png',
+    image_caption = 'Liver vasculature imaged using MUVE. (a-b) Front and back view of the reconstruction from 1500 slices and (c-g) several iterated higher-resolution zooms.',
+    abstract = 'Microvascular networks are vital for tissue function and disease progression, but their complex three-dimensional structure makes them difficult to analyze. Recent milling- based microscopy methods can capture images of these networks in whole organs at high resolution, though the resulting gigavoxel-scale images are challenging to segment. Convolutional neural networks (CNNs) are commonly used for this task, but they cannot account for the network’s shape and topology. This paper presents a solution using a fully auto-mated milling microscope to create a gigavoxel-scale dataset of mouse liver microvasculature. A CNN is trained to create an initial segmentation of the vascular network. The vessels are then refined using a parallel RSF-based level set model. To make this model practical on such large volumes, it is implemented in parallel using a sparse OpenVDB data structure that reduces the grid size to approxately 4% of the original.',
     resources = ProjectResources(
       publication = [
         Resource(
