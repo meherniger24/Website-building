@@ -428,6 +428,18 @@ PEOPLE = {
   'coauthor-name-other': Person(
     name = 'H Goharbavang, T Ahn, EK Alley, JD Wythe, G Chen, D Mayerich',
     website = ''
+  ),
+  'coauthor-name-other2': Person(
+    name = 'Mohammad Istiaque Reja, Jobaida Akhtar, Nishat Jahan, Rubaya Absar, Saleha Fatema',
+    website = ''
+  ),
+  'coauthor-name-other3': Person(
+    name = 'Tazkia Fairuz Hasin',
+    website = ''
+  ),
+  'coauthor-name-other4': Person(
+    name = 'Tazkia Fairuz Hasin, Mohammed Abu Faiz Nizami, Muhammad Alam Rafee',
+    website = ''
   )
 }
 
@@ -463,7 +475,7 @@ ABOUT_ME = AboutMe(
   ]
 )
 
-BIO = '''I'm a fifth year Ph.D. student at University of Houston where I'm advised by Dr. David Mayerich. My current research focuses on creating GPU-accelerated algorithms, computational methods for modeling, analyzing and visualizing gigavoxel-scale data. I am also developing computational methods for sparse volumetric microvasculature in OpenVDB optimized with TBB multithreading parallelism. My work is supported by the NSF Graduate Research Fellowship. I received a B.Sc in Electrical and Electronics Enginnering at Chittagong University of Engineering and Technology, Bangladesh, where I had the privilege of working with Photonic Crystal Fiber.'''
+BIO = '''I'm a fifth year Ph.D. student at University of Houston where I'm advised by Dr. David Mayerich. My current research focuses on creating GPU-accelerated algorithms, computational methods for modeling, analyzing and visualizing gigavoxel-scale data. I am also developing computational methods for sparse volumetric microvasculature in OpenVDB optimized with TBB multithreading parallelism. My work is supported by the NSF Graduate Research Fellowship. I received a B.Sc in Electrical and Electronics Enginnering at Chittagong University of Engineering and Technology, Bangladesh, where my research focus was on Photonic Crystal Fiber.'''
 
 PUBLICATIONS = {
   'pub1': Publication(
@@ -485,6 +497,38 @@ PUBLICATIONS = {
       PEOPLE['coauthor-name-other']
     ],
     venue = 'IEEE Transactions on Visualization and Computer Graphics (Under Review)',
+  ),
+  
+  'pub3': Publication(
+    image =  'data/images/thumbnails/pub3.JPG',
+    title =  'Modified Dodecagonal PCF Sensor with High Sensitivity for Detecting Harmful Chemical Compounds used in Poultry Feed',
+    url = 'https://ieeexplore.ieee.org/abstract/document/8975607/',
+    authors =  [
+      PEOPLE['your-name'],
+      PEOPLE['coauthor-name-other2']
+    ],
+    venue = '2019 5th International Conference on Advances in Electrical Engineering (ICAEE)',
+  ),
+  'pub4': Publication(
+    image =  'data/images/thumbnails/pub4.JPG',
+    title =  'Detection of harmful chemical compounds in plastics with highly sensitive photonic crystal fiber with higher nonlinear coefficient',
+    url = 'https://ieeexplore.ieee.org/abstract/document/9065165/',
+    authors =  [
+      PEOPLE['your-name'],
+      PEOPLE['coauthor-name-other3']
+    ],
+    venue = '2019 5th International Conference on Advances in Electrical Engineering (ICAEE)',
+  ),
+  
+  'pub5': Publication(
+    image =  'data/images/thumbnails/pub5.JPG',
+    title =  'Three modified structures of photonic crystal fiber for estimation of sulfuric acid concentration with low confinement Loss and negative dispersion',
+    url = 'https://ieeexplore.ieee.org/abstract/document/9068781/',
+    authors =  [
+      PEOPLE['your-name'],
+      PEOPLE['coauthor-name-other4']
+    ],
+    venue = '2019 5th International Conference on Advances in Electrical Engineering (ICAEE)',
   )
 }
 
@@ -514,8 +558,8 @@ PROJECT_PAGES = {
       publication = [
         Resource(
           icon = FontAwesomeIcons.PDF,
-          #path = '../../data/papers/pub1.pdf',
-          name = 'Paper : Our paper is available on IEEE'
+          path = '../../data/papers/pub1.pdf',
+          name = 'Paper'
         ),
         Resource(
           icon = FontAwesomeIcons.BOOK,
@@ -542,22 +586,22 @@ PROJECT_PAGES = {
         id = 'tjYVcOJONdI'
       )
     ],
-    acknowledgements = 'This work was generously supported by XYZ',
-    citation = '''
-    @article{
-      Author:PAPER:2024,
-      title={Placeholder Title},
-      volume={42},
-      ISSN={1557-7368},
-      url={https://www.arxiv.org},
-      number={4},
-      journal={ACM Transactions on Graphics},
-      publisher={Association for Computing Machinery (ACM)},
-      authors={YourName}
-      year={2024},
-      month=jul, 
-      pages={1-100}
-    }'''
+    #acknowledgements = 'This work was generously supported by XYZ',
+    #citation = '''
+    #@article{
+     # Author:PAPER:2024,
+     # title={Placeholder Title},
+     # volume={42},
+     # ISSN={1557-7368},
+     # url={https://www.arxiv.org},
+     # number={4},
+     # journal={ACM Transactions on Graphics},
+     # publisher={Association for Computing Machinery (ACM)},
+     # authors={YourName}
+     # year={2024},
+     # month=jul, 
+     # pages={1-100}
+   # }'''
   )
 }
 
