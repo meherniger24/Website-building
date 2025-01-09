@@ -422,11 +422,11 @@ PEOPLE = {
     me = True
   ),
   'coauthor-name': Person(
-    name = 'Coauthor Name',
+    name = 'W Moree, M Bluhm, J Eriksen, G Chen, D Mayerich',
     website = ''
   ),
   'coauthor-name-other': Person(
-    name = 'Coauthor Other',
+    name = 'H Goharbavang, T Ahn, EK Alley, JD Wythe, G Chen, D Mayerich',
     website = ''
   )
 }
@@ -478,12 +478,13 @@ PUBLICATIONS = {
     venue = '(ISBI 2025) 2025 IEEE International Symposium on Biomedical Imaging',
   ),
   'pub2': Publication(
-    image =  'data/images/thumbnails/KESM.png',
+    image =  'data/images/thumbnails/KESM.jpg',
     title =  'GPU-Accelerated RSF Level Set Evolution for Large-Scale Microvascular Segmentation',
     url = 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11037869/',
     authors =  [
       PEOPLE['your-name'],
       #PEOPLE['H Goharbavang, T Ahn, EK Alley, JD Wythe, G Chen, D Mayerich']
+      PEOPLE['coauthor-name-other']
     ],
     venue = 'IEEE Transactions on Visualization and Computer Graphics (Under Review)',
   ),
