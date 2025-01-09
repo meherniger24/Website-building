@@ -490,16 +490,16 @@ PUBLICATIONS = {
 
 COURSES = [
   Course(
-    image = 'data/images/thumbnails/antenna.jpg',
+    image = 'data/images/thumbnails/antenna.JPG',
     name = 'Antenna Engineering',
-    url = 'https://www.cmu.edu',
+    url = 'https://www.uh.edu',
     role = 'Teaching Assistant',
     details = 'UH, ECE, Spring 2021'
   ),
   Course(
-    image = 'data/images/thumbnails/robotics.jpg',
+    image = 'data/images/thumbnails/robotics.JPG',
     name = 'Intro to Robotics',
-    url = 'https://www.cmu.edu',
+    url = 'https://www.uh.edu',
     role = 'Teaching Assistant',
     details = 'UH, ECE, Fall 2020'
   )
