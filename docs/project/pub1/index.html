@@ -16,11 +16,11 @@
 <h1 class="card-title font-weight-normal">SEGMENTATION OF MICROVASCULAR NETWORKS EMBEDDED IN GIGAVOXEL 3D IMAGES USING RSF LEVEL SETS WITH OPENVDB</h1>
 <h4 class="font-weight-light"><b>Meher Niger</b> and W Moree, M Bluhm, J Eriksen, G Chen, D Mayerich</h4>
 <img alt="SEGMENTATION OF MICROVASCULAR NETWORKS EMBEDDED IN GIGAVOXEL 3D IMAGES USING RSF LEVEL SETS WITH OPENVDB-teaser" class="card-img-top mt-3" src="../../data/images/liver.png"/>
-<p class="font-italic mt-2">placeholder caption </p>
+<p class="font-italic mt-2">Liver vasculature imaged using MUVE. (a-b) Front and back view of the reconstruction from 1500 slices and (c-g) several iterated higher-resolution zooms. </p>
 <div>
 <h2 class="mt-4 font-weight-normal">Abstract</h2>
 <hr/>
-<p>Microvascular networks are vital for tissue function and disease progression, but their complex three-dimensional structure makes them difficult to analyze. Recent milling- based microscopy methods can capture images of these networks in whole organs at high resolution, though the resulting gigavoxel-scale images are challenging to segment. Convolutional neural networks (CNNs) are commonly used for this task, but they cannot account for the network’s shape and topology. This paper presents a solution using a fully auto-mated milling microscope to create a gigavoxel-scale dataset of mouse liver microvasculature. A CNN is trained to create an initial segmentation of the vascular network. The vessels are then refined using a parallel RSF-based level set model. To make this model practical on such large volumes, it is implemented in parallel using a sparse OpenVDB data structure that reduces the grid size to approxately 4% of the original.</p>
+<p>Microvascular networks are vital for tissue function and disease progression, but their complex three-dimensional structure makes them difficult to analyze. Recent milling- based microscopy methods can capture images of these networks in whole organs at high resolution, though the resulting gigavoxel-scale images are challenging to segment. Convolutional neural networks (CNNs) are commonly used for this task, but they cannot account for the networks shape and topology. This paper presents a solution using a fully auto-mated milling microscope to create a gigavoxel-scale dataset of mouse liver microvasculature. A CNN is trained to create an initial segmentation of the vascular network. The vessels are then refined using a parallel RSF-based level set model. To make this model practical on such large volumes, it is implemented in parallel using a sparse OpenVDB data structure that reduces the grid size to approxately 4% of the original.</p>
 </div>
 <div>
 <h2 class="mt-4 font-weight-normal">Resources</h2>
