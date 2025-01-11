@@ -250,8 +250,8 @@ class Home:
     soup.html.append(body)
     about_me_section = self.about_me.get_html()
     publications_list = self.get_publications_list_html()
+    ongoing_projects_list = self.get_ongoing_projects_html()  
     teaching_list = self.get_teaching_list_html()
-    ongoing_projects_list = self.get_ongoing_projects_html()  # Add ongoing projects section
     body.append(BeautifulSoup(f''' 
       <div class="container">
         {about_me_section} 
