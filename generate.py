@@ -154,28 +154,25 @@ class Home:
     self.ongoing_projects = ongoing_projects
     
   def get_ongoing_projects_html(self):
-    ongoing_list = ''
+    project_list = ''
     for project in self.ongoing_projects:
-        ongoing_list += f'''
+        project_list += f'''
+        <div>
           <div class="d-flex flex-row pb-4 align-items-center">
-            <img src="{project.image}" class="thumbnail img-responsive" />
+            <img
+              src={project.image}
+              class="thumbnail img-responsive"
+            />
             <div class="d-flex flex-column pl-4">
               <span>
-                <h4>
-                  <a href="{project.url}" target="_blank">{project.title}</a>
-                </h4>
+                <a href="{project.url}" class="item-title">{project.title}</a>
               </span>
+              
             </div>
           </div>
+        </div>
         '''
-    return f'''
-      <div>
-        <h4>Ongoing Projects</h4>
-        <hr/>
-        {ongoing_list}
-      </div>
-    '''
-
+    return project_list
   
 
   def get_publications_list_html(self):
@@ -276,6 +273,8 @@ class Home:
             {teaching_list}
           </div>
           <div>
+            <h4>Ongoing Projects</h4>
+            <hr/>
             {ongoing_projects_list}
           </div>
         </div>
