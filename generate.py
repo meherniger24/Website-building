@@ -146,11 +146,82 @@ class AboutMe:
     '''
 
 class Home:
-  def __init__(self, about_me, bio, publications = [], courses = []):
+  def __init__(self, about_me, bio, publications = [], courses = [], ongoing_projects=[]):
     self.about_me = about_me
     self.bio = bio
     self.publications = publications 
     self.courses = courses
+    self.ongoing_projects = ongoing_projects
+  
+    def get_ongoing_projects_html(self):
+      ongoing_list = ''
+      for project in self.ongoing_projects:
+          ongoing_list += project.get_html()
+      return f'''
+          <div>
+              <h4>Ongoing Projects</h4>
+              <hr/>
+              {ongoing_list}
+          </div>
+      '''
+
+  def generate(self, path):
+      soup = BeautifulSoup('<!DOCTYPE html> <html></html>', 'html.parser')
+
+      # Add styling 
+      head = soup.new_tag('head')
+      soup.html.append(head)
+      head.append(soup.new_tag('meta', charset="UTF-8"))
+      links = [
+          soup.new_tag('link', rel='stylesheet', type='text/css', 
+                       href=os.path.join('assets', style_asset))
+          for style_asset in STYLE_ASSETS
+      ]
+      [head.append(link) for link in links]
+
+      # Construct page
+      body = soup.new_tag('body')
+      soup.html.append(body)
+      about_me_section = self.about_me.get_html()
+      publications_list = self.get_publications_list_html()
+      teaching_list = self.get_teaching_list_html()
+      ongoing_projects_list = self.get_ongoing_projects_html()
+      body.append(BeautifulSoup(f''' 
+        <div class="container">
+          {about_me_section} 
+        </div>
+        <div class="container">
+          <div class="d-flex flex-column pl-5 pt-3">
+            <div>
+              <p>{self.bio}</p>
+            </div>
+            <div>
+              <h4>Publications</h4>
+              <hr/>
+              {publications_list}
+              <div class="pb-5">(*, † indicate equal contribution)</div>
+            </div>
+            <div>
+              <h4>Teaching</h4>
+              <hr/>
+              {teaching_list}
+            </div>
+            <div>
+              <h4>Ongoing Projects</h4>
+              <hr/>
+              {ongoing_projects_list}
+            </div>
+          </div>
+          <br>
+          <div class="text-center">
+            <h6 class="font-weight-light"> 
+              Source code for this website is <a href=https://github.com/baileymiller/website>available on Github</a>
+            </h6>
+          </div>
+        </div>
+      ''', 'html.parser'))
+      with open(os.path.join(path, 'index.html'), "w", encoding='utf-8') as file:
+          file.write(str(soup))  
 
   def get_publications_list_html(self):
     pub_list = ''
@@ -260,6 +331,43 @@ class Home:
     ''', 'html.parser'))
     with open(os.path.join(path, 'index.html'), "w") as file:
       file.write(str(soup))
+class OngoingProject:
+    def __init__(self, image, title, description, start_date, resources=[]):
+        self.image = image
+        self.title = title
+        self.description = description
+        self.start_date = start_date
+        self.resources = resources
+
+    def get_html(self):
+        resources_html = ''
+        for resource in self.resources:
+            resources_html += f'''
+                <div class="container mt-1 mb-1">
+                    <i class="{resource.icon}"></i>
+                    <a href="{resource.path}">
+                        {resource.name}
+                    </a>
+                </div>
+            '''
+        
+        return f'''
+            <div class="d-flex flex-row pb-4 align-items-center">
+                <img src="{self.image}" class="thumbnail img-responsive" />
+                <div class="d-flex flex-column pl-4">
+                    <span>
+                        <h4>{self.title}</h4>
+                    </span>
+                    <div>
+                        <p>{self.description}</p>
+                    </div>
+                    <div>
+                        <b>Start Date:</b> {self.start_date}
+                    </div>
+                    {resources_html}
+                </div>
+            </div>
+        '''
 
 class Project:
   def __init__(self, 
@@ -306,6 +414,8 @@ class Project:
         {resources_list}
       </div>
     '''
+    
+
 
   def get_abstract_html(self):
     if len(self.abstract) == 0:
@@ -459,12 +569,12 @@ ABOUT_ME = AboutMe(
     ),
     Resource(
       icon=FontAwesomeIcons.GITHUB,
-      name='meherniger24',
+      name='Github',
       path='https://github.com/meherniger24'
     ),
     Resource(
       icon=FontAwesomeIcons.GRAD_CAP,
-      name='Meher Niger',
+      name='Google Scholar',
       path='https://scholar.google.com/citations?user=VnKZqyIAAAAJ&hl=en&oi=ao'
     ),
     Resource(
@@ -531,6 +641,29 @@ PUBLICATIONS = {
     venue = '2019 5th International Conference on Advances in Electrical Engineering (ICAEE)',
   )
 }
+
+ONGOING_PROJECTS = [
+    OngoingProject(
+        image='../../data/images/ongoing1.png',
+        title='Ongoing Project 1',
+        description='Description of ongoing project 1.',
+        start_date='January 2025',
+        resources=[
+            Resource(
+                icon=FontAwesomeIcons.GITHUB,
+                path='https://github.com/your-username/ongoing1',
+                name='GitHub Repository'
+            )
+        ]
+    ),
+    OngoingProject(
+        image='../../data/images/ongoing2.png',
+        title='Ongoing Project 2',
+        description='Description of ongoing project 2.',
+        start_date='March 2024',
+    )
+]
+
 
 COURSES = [
   Course(
@@ -668,7 +801,8 @@ if __name__ == '__main__':
   home = Home(about_me=ABOUT_ME, 
               bio=BIO, 
               publications=PUBLICATIONS,  
-              courses=COURSES)
+              courses=COURSES,
+              ongoing_projects=ONGOING_PROJECTS)
               
   home.generate(directory)
   
