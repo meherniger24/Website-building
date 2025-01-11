@@ -225,26 +225,25 @@ class Home:
   def generate(self, path):
     soup = BeautifulSoup('<!DOCTYPE html> <html></html>', 'html.parser')
 
-    # add styling 
+    # Add styling 
     head = soup.new_tag('head')
     soup.html.append(head)
-
     head.append(soup.new_tag('meta', charset="UTF-8"))
     links = [
-      soup.new_tag('link', rel='stylesheet', type='text/css', 
-                   href=os.path.join('assets', style_asset))
-      for style_asset in STYLE_ASSETS
+        soup.new_tag('link', rel='stylesheet', type='text/css', 
+                     href=os.path.join('assets', style_asset))
+        for style_asset in STYLE_ASSETS
     ]
     [head.append(link) for link in links]
 
-    # construct page
+    # Construct page
     body = soup.new_tag('body')
     soup.html.append(body)
     about_me_section = self.about_me.get_html()
     publications_list = self.get_publications_list_html()
     teaching_list = self.get_teaching_list_html()
     ongoing_projects_list = self.get_ongoing_projects_html()
-    body.append(BeautifulSoup(f''' 
+    body.append(BeautifulSoup(f'''
       <div class="container">
         {about_me_section} 
       </div>
@@ -257,27 +256,32 @@ class Home:
             <h4>Publications</h4>
             <hr/>
             {publications_list}
-            <div class="pb-5"></div>
+            <div class="pb-5">(*, † indicate equal contribution)</div>
           </div>
           <div>
-                {teaching_list}
-              </div>
-              <div>
-                <h4>Ongoing Projects</h4>
-                <hr/>
-                {ongoing_projects_list}
-              </div>
-            </div>
-            <br>
-            <div class="text-center">
-              <h6 class="font-weight-light"> 
-            Source code for this website is <a href=https://github.com/meherniger24/website>available on Github</a>
+            <h4>Teaching</h4>
+            <hr/>
+            {teaching_list}
+          </div>
+          <div>
+            <h4>Ongoing Projects</h4>
+            <hr/>
+            {ongoing_projects_list}
+          </div>
+        </div>
+        <br>
+        <div class="text-center">
+          <h6 class="font-weight-light"> 
+            Source code for this website is <a href=https://github.com/baileymiller/website>available on Github</a>
           </h6>
         </div>
       </div>
     ''', 'html.parser'))
-    with open(os.path.join(path, 'index.html'), "w") as file:
-      file.write(str(soup))
+    with open(os.path.join(path, 'index.html'), "w", encoding='utf-8') as file:
+        file.write(str(soup))
+
+
+
 class OngoingProject:
     def __init__(self, image, title, description, start_date, resources=[]):
         self.image = image
