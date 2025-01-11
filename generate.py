@@ -604,14 +604,14 @@ PUBLICATIONS = {
 
 ONGOING_PROJECTS = [
     OngoingProject(
-        image='../../data/images/thumbnails/stardist.JPG',
+        image='data/images/thumbnails/stardist.JPG',
         title='Cell segmentation with Deep Learning based StarDist 3D',
         #description='Description of ongoing project 1.',
         #start_date='January 2025',
         url = 'ongoing/pro1',
     ),
     OngoingProject(
-        image='../../data/images/thumbnails/skele.JPG',
+        image='data/images/thumbnails/skele.JPG',
         title='A fully parallel 3D thinning algorithm for giga-voxel scale microvasculature using OpenVDB',
         #description='Description of ongoing project 2.',
         url = 'ongoing/pro2',
