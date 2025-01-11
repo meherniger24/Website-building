@@ -221,28 +221,28 @@ class Home:
         </div>
       '''
     return teaching_list
-
   def generate(self, path):
     soup = BeautifulSoup('<!DOCTYPE html> <html></html>', 'html.parser')
 
-    # add styling 
+    # Add styling 
     head = soup.new_tag('head')
     soup.html.append(head)
 
     head.append(soup.new_tag('meta', charset="UTF-8"))
     links = [
-      soup.new_tag('link', rel='stylesheet', type='text/css', 
-                   href=os.path.join('assets', style_asset))
-      for style_asset in STYLE_ASSETS
+        soup.new_tag('link', rel='stylesheet', type='text/css', 
+                     href=os.path.join('assets', style_asset))
+        for style_asset in STYLE_ASSETS
     ]
     [head.append(link) for link in links]
 
-    # construct page
+    # Construct page
     body = soup.new_tag('body')
     soup.html.append(body)
     about_me_section = self.about_me.get_html()
     publications_list = self.get_publications_list_html()
     teaching_list = self.get_teaching_list_html()
+    ongoing_projects_list = self.get_ongoing_projects_html()  # Add ongoing projects section
     body.append(BeautifulSoup(f''' 
       <div class="container">
         {about_me_section} 
@@ -263,6 +263,9 @@ class Home:
             <hr/>
             {teaching_list}
           </div>
+          <div>
+            {ongoing_projects_list}
+          </div>
         </div>
         <br>
         <div class="text-center">
@@ -272,8 +275,9 @@ class Home:
         </div>
       </div>
     ''', 'html.parser'))
-    with open(os.path.join(path, 'index.html'), "w") as file:
-      file.write(str(soup))
+    with open(os.path.join(path, 'index.html'), "w", encoding="utf-8") as file:
+        file.write(str(soup))
+
 class OngoingProject:
     def __init__(self, image, title, description, start_date, resources=[]):
         self.image = image
@@ -744,7 +748,8 @@ if __name__ == '__main__':
   home = Home(about_me=ABOUT_ME, 
               bio=BIO, 
               publications=PUBLICATIONS,  
-              courses=COURSES)
+              courses=COURSES,
+              ongoing_projects=ONGOING_PROJECTS)
               
   home.generate(directory)
   
