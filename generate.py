@@ -154,16 +154,28 @@ class Home:
     self.ongoing_projects = ongoing_projects
     
   def get_ongoing_projects_html(self):
-      ongoing_list = ''
-      for project in self.ongoing_projects:
-          ongoing_list += project.get_html()
-      return f'''
-          <div>
-              <h4>Ongoing Projects</h4>
-              <hr/>
-              {ongoing_list}
+    ongoing_list = ''
+    for project in self.ongoing_projects:
+        ongoing_list += f'''
+          <div class="d-flex flex-row pb-4 align-items-center">
+            <img src="{project.image}" class="thumbnail img-responsive" />
+            <div class="d-flex flex-column pl-4">
+              <span>
+                <h4>
+                  <a href="{project.url}" target="_blank">{project.title}</a>
+                </h4>
+              </span>
+            </div>
           </div>
-      '''
+        '''
+    return f'''
+      <div>
+        <h4>Ongoing Projects</h4>
+        <hr/>
+        {ongoing_list}
+      </div>
+    '''
+
   
 
   def get_publications_list_html(self):
@@ -279,11 +291,12 @@ class Home:
         file.write(str(soup))
 
 class OngoingProject:
-    def __init__(self, image, title, description, start_date, resources=[]):
+    def __init__(self, image, title, url='', resources=[]):
         self.image = image
         self.title = title
-        self.description = description
-        self.start_date = start_date
+        #self.description = description
+        #self.start_date = start_date
+        self.url = url
         self.resources = resources
 
     def get_html(self):
@@ -591,23 +604,17 @@ PUBLICATIONS = {
 
 ONGOING_PROJECTS = [
     OngoingProject(
-        image='../../data/images/ongoing1.png',
-        title='Ongoing Project 1',
-        description='Description of ongoing project 1.',
-        start_date='January 2025',
-        resources=[
-            Resource(
-                icon=FontAwesomeIcons.GITHUB,
-                path='https://github.com/your-username/ongoing1',
-                name='GitHub Repository'
-            )
-        ]
+        image='../../data/images/thumbnails/stardist.JPG',
+        title='Cell segmentation with Deep Learning based StarDist 3D',
+        #description='Description of ongoing project 1.',
+        #start_date='January 2025',
+        url = 'ongoing/pro1',
     ),
     OngoingProject(
-        image='../../data/images/ongoing2.png',
-        title='Ongoing Project 2',
-        description='Description of ongoing project 2.',
-        start_date='March 2024',
+        image='../../data/images/thumbnails/skele.JPG',
+        title='A fully parallel 3D thinning algorithm for giga-voxel scale microvasculature using OpenVDB',
+        #description='Description of ongoing project 2.',
+        url = 'ongoing/pro2',
     )
 ]
 
@@ -747,9 +754,9 @@ if __name__ == '__main__':
 
   home = Home(about_me=ABOUT_ME, 
               bio=BIO, 
-              publications=PUBLICATIONS,  
-              courses=COURSES,
-              ongoing_projects=ONGOING_PROJECTS)
+              publications=PUBLICATIONS,
+              ongoing_projects=ONGOING_PROJECTS,
+              courses=COURSES)
               
   home.generate(directory)
   
