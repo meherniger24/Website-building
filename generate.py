@@ -266,18 +266,18 @@ class Home:
             <hr/>
             {publications_list}
             <div class="pb-5"></div>
-          </div>
-          <div>
-            <h4>Ongoing Projects</h4>
-            <hr/>
-            {ongoing_projects_list}
-          </div>
-        </div>
+            </div>
+            <div>
+              <h4>Ongoing Projects</h4>
+              <hr/>
+              {ongoing_projects_list} 
+             </div>
+             <div>
             <h4>Teaching</h4>
             <hr/>
             {teaching_list}
           </div>
-          <div>
+        </div>
         <br>
         <div class="text-center">
           <h6 class="font-weight-light"> 
