@@ -22,6 +22,15 @@
 <hr/>
 <p>Microvascular networks are vital for tissue function and disease progression, but their complex three-dimensional structure makes them difficult to analyze. Recent milling- based microscopy methods can capture images of these networks in whole organs at high resolution, though the resulting gigavoxel-scale images are challenging to segment. Convolutional neural networks (CNNs) are commonly used for this task, but they cannot account for the networks shape and topology. This paper presents a solution using a fully auto-mated milling microscope to create a gigavoxel-scale dataset of mouse liver microvasculature. A CNN is trained to create an initial segmentation of the vascular network. The vessels are then refined using a parallel RSF-based level set model. To make this model practical on such large volumes, it is implemented in parallel using a sparse OpenVDB data structure that reduces the grid size to approxately 4% of the original.</p>
 </div>
+<div class="container"><h2 class="mt-4 font-weight-normal">Visualization</h2><hr/><div class="row">
+<div class="col-md-6">
+<h4 class="font-weight-light">Visualization of a vessel cube in openvdb vdb_view</h4>
+<video class="embed-responsive-item project-video" controls="" width="100%">
+<source src="openvdb.mp4" type="video/mp4"/>
+                    Your browser does not support the video tag.
+                </video>
+</div>
+</div></div> <!-- Embedded videos appear here -->
 <div>
 <h2 class="mt-4 font-weight-normal">Resources</h2>
 <hr/>
@@ -48,14 +57,5 @@
 </div>
 </div>
 </div>
-<div class="container"><h2 class="mt-4 font-weight-normal">Visualization</h2><hr/><div class="row">
-<div class="col-md-6">
-<h4 class="font-weight-light">Visualization of a vessel cube in openvdb vdb_view</h4>
-<video class="embed-responsive-item project-video" controls="" width="100%">
-<source src="openvdb.mp4" type="video/mp4"/>
-                    Your browser does not support the video tag.
-                </video>
-</div>
-</div></div> <!-- Embedded videos appear here -->
 </div>
 </body></html>
