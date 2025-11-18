@@ -1,6 +1,8 @@
 from enum import Enum
 import os
 from bs4 import BeautifulSoup
+import shutil
+
 
 STYLE_ASSETS = [
   'font-awesome/css/font-awesome.css' ,
@@ -156,23 +158,31 @@ class Home:
   def get_ongoing_projects_html(self):
     project_list = ''
     for project in self.ongoing_projects:
+        # Use main image if defined, else first image from the list, else use placeholder
+        thumbnail = project.image or (project.images[0] if project.images else 'assets/default_placeholder.png')
+
+        # Optionally display a video icon if videos exist
+        video_icon = '<i class="fas fa-video ml-2"></i>' if project.videos else ''
+
         project_list += f'''
-        <div>
-          <div class="d-flex flex-row pb-4 align-items-center">
-            <img
-              src={project.image}
-              class="thumbnail img-responsive"
-            />
-            <div class="d-flex flex-column pl-4">
-              <span>
-                <a href="{project.url}" class="item-title">{project.title}</a>
-              </span>
-              
+            <div>
+                <div class="d-flex flex-row pb-4 align-items-center">
+                    <img
+                        src="{thumbnail}"
+                        class="thumbnail img-responsive"
+                        style="max-width: 150px; height: auto;"
+                    />
+                    <div class="d-flex flex-column pl-4">
+                        <span>
+                            <a href="{project.url}" class="item-title">{project.title}{video_icon}</a>
+                        </span>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
         '''
     return project_list
+
+
   
 
   def get_publications_list_html(self):
@@ -281,7 +291,7 @@ class Home:
         <br>
         <div class="text-center">
           <h6 class="font-weight-light"> 
-            Source code for this website is <a href=https://github.com/meherniger24/website>available on Github</a>
+            Source code for this website is <a href=https://github.com/meherniger24>available on Github</a>
           </h6>
         </div>
       </div>
@@ -290,43 +300,89 @@ class Home:
         file.write(str(soup))
 
 class OngoingProject:
-    def __init__(self, image, title, url='', resources=[]):
-        self.image = image
+    def __init__(self, image='', title='', url='', details=[], videos=[], images=[]):
+        self.image = image  # Main preview image (optional)
         self.title = title
-        #self.description = description
-        #self.start_date = start_date
         self.url = url
-        self.resources = resources
+        self.details = details  # List of description points
+        self.videos = videos    # List of video paths
+        self.images = images    # List of image paths
 
-    def get_html(self):
-        resources_html = ''
-        for resource in self.resources:
-            resources_html += f'''
-                <div class="container mt-1 mb-1">
-                    <i class="{resource.icon}"></i>
-                    <a href="{resource.path}">
-                        {resource.name}
-                    </a>
+    def generate(self, path):
+        """Generates the HTML for this project."""
+        # Convert details into a bulleted list
+        details_html = '<ul>'
+        for detail in self.details:
+            details_html += f'<li>{detail}</li>'
+        details_html += '</ul>'
+
+        # Render videos
+        videos_html = ''
+        for video in self.videos:
+            videos_html += f'''
+                <div class="mt-3 mb-3">
+                    <h4 class="font-weight-light">Video</h4>
+                    <video controls class="embed-responsive-item project-video" style="max-width: 100%; height: auto;">
+                        <source src="{video}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             '''
-        
-        return f'''
-            <div class="d-flex flex-row pb-4 align-items-center">
-                <img src="{self.image}" class="thumbnail img-responsive" />
-                <div class="d-flex flex-column pl-4">
-                    <span>
-                        <h4>{self.title}</h4>
-                    </span>
-                    <div>
-                        <p>{self.description}</p>
-                    </div>
-                    <div>
-                        <b>Start Date:</b> {self.start_date}
-                    </div>
-                    {resources_html}
+
+        # Render additional images
+        images_html = ''
+        for img in self.images:
+            images_html += f'''
+                <div class="mt-3 mb-3">
+                    <h4 class="font-weight-light">Image</h4>
+                    <img src="{img}" alt="Project image" style="max-width: 100%; height: auto;" class="img-fluid">
                 </div>
+            '''
+
+        # Use BeautifulSoup to build HTML
+        soup = BeautifulSoup('<!DOCTYPE html> <html></html>', 'html.parser')
+
+        head = soup.new_tag('head')
+        soup.html.append(head)
+        head.append(soup.new_tag('meta', charset="UTF-8"))
+        links = [
+            soup.new_tag('link', rel='stylesheet', type='text/css',
+                         href=os.path.join('../../assets', style_asset))
+            for style_asset in STYLE_ASSETS
+        ]
+        [head.append(link) for link in links]
+
+        body = soup.new_tag('body')
+        soup.html.append(body)
+        body.append(BeautifulSoup(f'''
+            <div class="container">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container-fluid">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"> 
+                                <a href="../../">
+                                <i class="{FontAwesomeIcons.BACK_ARROW}"></i>
+                                Home
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <h1 class="card-title font-weight-normal">{self.title}</h1>
+
+                <h4>Description:</h4>
+                {details_html}
+                {images_html}
+                {videos_html}
             </div>
-        '''
+        ''', 'html.parser'))
+
+        # Save the HTML file
+        if not os.path.exists(path):
+            os.makedirs(path)
+        with open(os.path.join(path, 'index.html'), "w", encoding="utf-8") as file:
+            file.write(str(soup))
+
 
 class Project:
   def __init__(self, 
@@ -383,20 +439,58 @@ class Project:
 
   def get_video_html(self):
     if len(self.videos) == 0:
-      return ''
-    video_list = '<div class="container">'
-    for video in self.videos:
-      video_list += f'''
-        <div class="img-container">
-        <h4 class="font-weight-light">{video.name}</h4>
-          <iframe class="embed-responsive-item project-video" 
-                  src="https://www.youtube.com/embed/{video.id}" allowfullscreen>
-          </iframe>
-        </div>
-      '''
-    video_list += '</div>'
+        return ''
 
-    return self.create_section('Videos', video_list)
+    video_list = '<div class="container">'
+    video_list += '<h2 class="mt-4 font-weight-normal">Visualization</h2><hr>'
+
+    for i in range(0, len(self.videos), 2):
+        video_list += '<div class="row">'
+
+        # First video
+        video_list += f'''
+            <div class="col-md-6">
+                <h4 class="font-weight-light">{self.videos[i].name}</h4>
+                <video class="autoplay-video embed-responsive-item project-video" 
+                       width="100%" muted loop playsinline>
+                    <source src="{self.videos[i].id}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        '''
+
+        # Second video (if exists)
+        if i + 1 < len(self.videos):
+            video_list += f'''
+                <div class="col-md-6">
+                    <h4 class="font-weight-light">{self.videos[i + 1].name}</h4>
+                    <video class="autoplay-video embed-responsive-item project-video" 
+                           width="100%" muted loop playsinline>
+                        <source src="{self.videos[i + 1].id}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            '''
+
+        video_list += '</div>'  # Close row
+
+    video_list += '</div>'  # Close container
+
+    # Add JavaScript to force autoplay
+    video_list += '''
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let videos = document.querySelectorAll(".autoplay-video");
+            videos.forEach(video => {
+                video.play().catch(error => {
+                    console.log("Autoplay prevented. User interaction required.");
+                });
+            });
+        });
+    </script>
+    '''
+    
+    return self.create_section('Visualization', video_list)
 
   def get_resources_html(self):
     resources_html = ''
@@ -438,20 +532,68 @@ class Project:
   def generate(self, path, publication):
     soup = BeautifulSoup('<!DOCTYPE html> <html></html>', 'html.parser')
 
-    # add styling 
+    # Add styling
     head = soup.new_tag('head')
     head.append(soup.new_tag('meta', charset="UTF-8"))
     soup.html.append(head)
     links = [
-      soup.new_tag('link', rel='stylesheet', type='text/css', 
-                   href=os.path.join('../../assets', style_asset))
-      for style_asset in STYLE_ASSETS
+        soup.new_tag('link', rel='stylesheet', type='text/css', 
+                     href=os.path.join('../../assets', style_asset))
+        for style_asset in STYLE_ASSETS
     ]
     [head.append(link) for link in links] 
-  
-    # construct page
+
+    # Construct body
     body = soup.new_tag('body')
     soup.html.append(body)
+    
+    # Copy videos into the project directory
+    video_paths = []
+    for video in self.videos:
+        video_filename = os.path.basename(video.id)
+        video_dest = os.path.join(path, video_filename)
+        
+        # Copy video only if it doesn't exist in the destination folder
+        if not os.path.exists(video_dest):
+            shutil.copy(video.id, video_dest)
+
+        video_paths.append(video_filename)  # Store correct video path
+
+    # Generate video HTML (two videos per row)
+    videos_html = '<div class="container">'
+    videos_html += '<h2 class="mt-4 font-weight-normal">Visualization</h2><hr>'
+
+    for i in range(0, len(video_paths), 2):
+        videos_html += '<div class="row">'
+
+        # First video
+        videos_html += f'''
+            <div class="col-md-6">
+                <h4 class="font-weight-light">{self.videos[i].name}</h4>
+                <video controls class="embed-responsive-item project-video" width="100%">
+                    <source src="{video_paths[i]}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        '''
+
+        # Second video (if exists)
+        if i + 1 < len(video_paths):
+            videos_html += f'''
+                <div class="col-md-6">
+                    <h4 class="font-weight-light">{self.videos[i + 1].name}</h4>
+                    <video controls class="embed-responsive-item project-video" width="100%">
+                        <source src="{video_paths[i + 1]}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            '''
+
+        videos_html += '</div>'  # Close row
+
+    videos_html += '</div>'  # Close container
+
+    # Add the full page content
     body.append(BeautifulSoup(f'''
       <div class="container">
         <nav class="navbar navbar-expand-lg">
@@ -462,27 +604,29 @@ class Project:
                 <i class="{FontAwesomeIcons.BACK_ARROW}"></i>
                 home
                 </a>
-                </li>
+              </li>
             </ul>
           </div>
         </nav>
         <h1 class="card-title font-weight-normal">{publication.title}</h1>
         <h4 class="font-weight-light">{publication.get_author_names()}</h4>
-        <img src={project.image} class="card-img-top mt-3" alt="{publication.title}-teaser">
-        <p class="font-italic mt-2">{project.image_caption} </p>
+        <img src="{self.image}" class="card-img-top mt-3" alt="{publication.title}-teaser">
+        <p class="font-italic mt-2">{self.image_caption}</p>
         {self.get_abstract_html()}
+        {videos_html}  <!-- Embedded videos appear here -->
         {self.get_resources_html()}
-        {self.get_video_html()}
         {self.get_citation_html()}
         {self.get_acknowledgements_html()}
       </div>
     ''', 'html.parser'))
 
+    # Ensure directory exists
     if not os.path.exists(path):
-      os.makedirs(path)
+        os.makedirs(path)
 
-    with open(os.path.join(path, 'index.html'), "w") as file:
-      file.write(str(soup))
+    # Write the final HTML file
+    with open(os.path.join(path, 'index.html'), "w", encoding="utf-8") as file:
+        file.write(str(soup))
 
 PEOPLE = {
   'your-name': Person(
@@ -495,7 +639,7 @@ PEOPLE = {
     website = ''
   ),
   'coauthor-name-other': Person(
-    name = 'H Goharbavang, T Ahn, EK Alley, JD Wythe, G Chen, D Mayerich',
+    name = 'H Goharbavang, A Pillai, JD Wythe, G Chen, D Mayerich',
     website = ''
   ),
   'coauthor-name-other2': Person(
@@ -514,7 +658,7 @@ PEOPLE = {
 
 ABOUT_ME = AboutMe(
   name = 'Meher Niger',
-  image = 'data/images/profile.jpg', 
+  image = 'data/images/profile1.jpg', 
   resources=[
     Resource(
       icon=FontAwesomeIcons.MAP_MARKER,
@@ -523,8 +667,8 @@ ABOUT_ME = AboutMe(
     ),
     Resource(
       icon=FontAwesomeIcons.ENVELOPE,
-      name='mniger@uh.edu',
-      path='mailto:mniger@uh.edu'
+      name='mehernigeretho@gmail.com',
+      path='mailto:mehernigeretho@gmail.com'
     ),
     Resource(
       icon=FontAwesomeIcons.GITHUB,
@@ -537,6 +681,11 @@ ABOUT_ME = AboutMe(
       path='https://scholar.google.com/citations?user=VnKZqyIAAAAJ&hl=en&oi=ao'
     ),
     Resource(
+      icon=FontAwesomeIcons.GRAD_CAP,
+      name='Linkedin',
+      path='https://www.linkedin.com/in/meher-niger-84177bb1/'
+    ),
+    Resource(
       icon=FontAwesomeIcons.FILE,
       name='CV',
       path='data/documents/cv.pdf'
@@ -544,7 +693,7 @@ ABOUT_ME = AboutMe(
   ]
 )
 
-BIO = '''I'm a fifth year Ph.D. student at University of Houston where I'm advised by Dr. David Mayerich. My current research focuses on creating GPU-accelerated algorithms, computational methods for modeling, analyzing and visualizing gigavoxel-scale data. I am also developing computational methods for sparse volumetric microvasculature in OpenVDB optimized with TBB multithreading parallelism. My work is supported by the NSF Graduate Research Fellowship. I received a B.Sc in Electrical and Electronics Enginnering at Chittagong University of Engineering and Technology, Bangladesh, where my research focus was on Photonic Crystal Fiber.'''
+BIO = '''I'm a fifth year Ph.D. student at University of Houston where I'm advised by Dr. <a href="https://www.ece.uh.edu/faculty/mayerich/">David Mayerich</a>. My current research focuses on creating GPU-accelerated algorithms, computational methods for modeling, analyzing and visualizing gigavoxel-scale data. I have also developed computational methods for sparse volumetric microvasculature in OpenVDB optimized with TBB multithreading parallelism. Currently, I am working on a deep learning based 3D Stardist model to detect specific kinds of nuclei AND Developing A fully parallel 3D thinning algorithm for giga-voxel scale microvasculature using OpenVDB. My work is supported by the NSF Graduate Research Fellowship. I received a B.Sc in Electrical and Electronics Enginnering at Chittagong University of Engineering and Technology, Bangladesh, where my research focus was on Photonic Crystal Fiber.'''
 
 PUBLICATIONS = {
   'pub1': Publication(
@@ -555,7 +704,7 @@ PUBLICATIONS = {
       PEOPLE['your-name'],
       PEOPLE['coauthor-name'],
     ],
-    venue = '(ISBI 2025) 2025 IEEE International Symposium on Biomedical Imaging',
+    venue = '2025 IEEE International Symposium on Biomedical Imaging (ISBI 2025)',
   ),
   'pub2': Publication(
     image =  'data/images/thumbnails/KESM.jpg',
@@ -565,7 +714,7 @@ PUBLICATIONS = {
       PEOPLE['your-name'],
       PEOPLE['coauthor-name-other']
     ],
-    venue = 'IEEE Transactions on Visualization and Computer Graphics (Under Review)',
+    venue = 'Cell Reports Methods',
   ),
   
   'pub3': Publication(
@@ -586,7 +735,7 @@ PUBLICATIONS = {
       PEOPLE['your-name'],
       PEOPLE['coauthor-name-other3']
     ],
-    venue = '2019 5th International Conference on Advances in Electrical Engineering (ICAEE)',
+    venue = '2019 IEEE International Conference on Signal Processing, Information, Communication & Systems (SPICSCON)',
   ),
   
   'pub5': Publication(
@@ -597,28 +746,63 @@ PUBLICATIONS = {
       PEOPLE['your-name'],
       PEOPLE['coauthor-name-other4']
     ],
-    venue = '2019 5th International Conference on Advances in Electrical Engineering (ICAEE)',
+    venue = '2019 4th International Conference on Electrical Information and Communication Technology (EICT)',
   )
 }
 
+video1 = Video(name="Ongoing Project 1 Demo", id="ongoing/pro1/video.mp4")
+
 ONGOING_PROJECTS = [
+    
+    
+    OngoingProject(
+        image='data/images/thumbnails/skele.JPG',
+        title='An End-to-End Pipeline for Vascular Network Extraction and Quantitative Characterization: Segmentation, Skeletonization, and Comparative Benchmarking',
+        #description='Description of ongoing project 2.',
+        details=[
+            "I have been developing an integrated software framework that combines segmentation, skeletonization, and quantitative vascular analysis into a single pipeline. This framework enables automated vessel extraction, graph-based skeleton representation, and computation of key descriptors such as radius, tortuosity, curvature, volume, and surface area. By linking voxel-level image processing with graph-based modeling, my work bridges the gap between raw image data and clinically meaningful biomarkers. To support this framework, I designed custom data structures in C++ for efficient representation of vascular graphs, nodes, and edges, enabling scalable analysis of large volumetric datasets. These data structures were optimized for memory efficiency and integrated seamlessly with high-performance computing libraries such as OpenVDB and TBB. In addition, I developed visualization and interactive analysis tools using OpenGL and Dear ImGui, which allow real-time rendering, editing, and exploration of vascular networks."
+            "  3D Visualization is coming soon....."
+        ],
+        url = 'ongoing/pro2',
+        #videos=["video.mp4"]
+    ),
+    
+    
     OngoingProject(
         image='data/images/thumbnails/stardist.JPG',
         title='Cell segmentation with Deep Learning based StarDist 3D',
-        #description='Description of ongoing project 1.',
-        #start_date='January 2025',
+        details=[
+            "I am working on a deep learning-based Stardist 3D model to segment individual cells. To facilitate this, I developed a GUI using PyQt to manually label each cell with its corresponding name, enabling the preparation of high-quality training data.",
+            "The GUI includes several features:"
+            "Data Loading: It supports loading two volumes (raw and segmented) along with a text file containing class IDs and their corresponding names. The text file can be edited or modified as needed, and the GUI automatically updates the cell IDs and names upon loading.",
+            "Zoom and Transparency: Users can zoom in and out for detailed cell examination and adjust the transparency level between the raw and segmented volumes for better visualization.",
+            "Cell Viewing Options: The GUI allows users to view only labeled cells, unlabeled cells, or all cells at once."
+            "Data Saving: The final labeled cells can be saved in .npy or .txt format for further use. This tool streamlines the process of annotating cells and ensures the creation of accurate training data for deep learning models.."
+            "A video of the GUI has been provided for reference."
+        ],
         url = 'ongoing/pro1',
-    ),
+        videos=["video.mp4"]
+    ), 
     OngoingProject(
-        image='data/images/thumbnails/skele.JPG',
-        title='A fully parallel 3D thinning algorithm for giga-voxel scale microvasculature using OpenVDB',
-        #description='Description of ongoing project 2.',
-        url = 'ongoing/pro2',
+        image='data/images/thumbnails/stardist.JPG',
+        title='Weak to Strong Segmentation',
+        
+        url = 'ongoing/pro3',
+        #videos=["video.mp4"]
     )
+    
 ]
 
 
 COURSES = [
+    Course(
+      image = 'data/images/thumbnails/numerical.jpg',
+      name = 'Numerical Methods for Electrical and Computer Engineers',
+      url = 'https://www.uh.edu',
+      role = 'Teaching Assistant',
+      details = 'UH, ECE, Spring 2024'
+    ),
+    
   Course(
     image = 'data/images/thumbnails/antenna.JPG',
     name = 'Antenna Engineering',
@@ -629,6 +813,13 @@ COURSES = [
   Course(
     image = 'data/images/thumbnails/robotics.JPG',
     name = 'Intro to Robotics',
+    url = 'https://www.uh.edu',
+    role = 'Teaching Assistant',
+    details = 'UH, ECE, Fall 2020'
+  ),
+  Course(
+    image = 'data/images/thumbnails/tele.jpg',
+    name = 'Advanced Telecommunication',
     url = 'https://www.uh.edu',
     role = 'Teaching Assistant',
     details = 'UH, ECE, Fall 2020'
@@ -644,34 +835,39 @@ PROJECT_PAGES = {
       publication = [
         Resource(
           icon = FontAwesomeIcons.PDF,
-          path = '../../data/papers/pub1.pdf',
+          path = 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VnKZqyIAAAAJ&citation_for_view=VnKZqyIAAAAJ:UeHWp8X0CEIC',
           name = 'Paper'
         ),
-        Resource(
-          icon = FontAwesomeIcons.BOOK,
-          path = 'https://www.acm.org/',
-          name =  'Publisher\'s Version'
-        ),
-        Resource(
-          icon =  FontAwesomeIcons.ARCHIVE,
-          path =  'https://arxiv.org',
-          name =  'ArXiv Version'
-        )
+        #Resource(
+        #  icon = FontAwesomeIcons.BOOK,
+         # path = 'https://www.acm.org/',
+        #  name =  'Publisher\'s Version'
+        #),
+        #Resource(
+       #   icon =  FontAwesomeIcons.ARCHIVE,
+       #   path =  'https://arxiv.org',
+       #   name =  'ArXiv Version'
+       # )
       ],
       code = [
         Resource(
           icon =  FontAwesomeIcons.GITHUB,
-          path =  'https://github.com',
+          path =  'https://github.com/meherniger24/paper-rsf-openvdb',
           name = 'Github project with full source code'
         )
       ],
     ),
-    videos = [
-      Video(
-        name =  'presentation slides',
-        id = 'tjYVcOJONdI'
-      )
-    ],
+    videos=[
+            Video(name='Visualization of a vessel cube in openvdb vdb_view', id='docs/project/pub1/openvdb.mp4'),
+           # Video(name='Evolution of the level set from 𝜙<sub>0</sub> to 𝜙<sub>n</sub></p> ', id='docs/project/pub1/video3.mp4')
+            
+        ],
+   # videos = [
+    #  Video(
+    #    name =  'presentation slides',
+    #    id = 'tjYVcOJONdI'
+   #   )
+   # ],
     #acknowledgements = 'This work was generously supported by XYZ',
     #citation = '''
     #@article{
@@ -698,34 +894,39 @@ PROJECT_PAGES = {
       publication = [
         Resource(
           icon = FontAwesomeIcons.PDF,
-          path = '../../data/papers/pub2.pdf',
+          path = 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11037869/',
           name = 'Paper'
         ),
-        Resource(
-          icon = FontAwesomeIcons.BOOK,
-          path = 'https://www.acm.org/',
-          name =  'Publisher\'s Version'
-        ),
-        Resource(
-          icon =  FontAwesomeIcons.ARCHIVE,
-          path =  'https://arxiv.org',
-          name =  'ArXiv Version'
-        )
+        #Resource(
+        #  icon = FontAwesomeIcons.BOOK,
+         # path = 'https://www.acm.org/',
+        #  name =  'Publisher\'s Version'
+        #),
+        #Resource(
+       #   icon =  FontAwesomeIcons.ARCHIVE,
+       #   path =  'https://arxiv.org',
+       #   name =  'ArXiv Version'
+       # )
       ],
       code = [
         Resource(
           icon =  FontAwesomeIcons.GITHUB,
-          path =  'https://github.com',
+          path =  'https://github.com/meherniger24/paper-rsf-vesselseg',
           name = 'Github project with full source code'
         )
       ],
     ),
-    videos = [
-      Video(
-        name =  'presentation slides',
-        id = 'tjYVcOJONdI'
-      )
-    ],
+    videos=[
+            Video(name='360&#176 rotation of the evolved 𝜙<sub>n</sub></p>', id='docs/project/pub1/video1.mp4'),
+            Video(name='Evolution of the level set from 𝜙<sub>0</sub> to 𝜙<sub>n</sub></p> ', id='docs/project/pub1/video3.mp4')
+            
+        ],
+   # videos = [
+   #   Video(
+   #     name =  'presentation slides',
+   #     id = 'tjYVcOJONdI'
+   #   )
+   # ],
     #acknowledgements = 'This work was generously supported by XYZ',
     #citation = '''
     #@article{
@@ -747,21 +948,28 @@ PROJECT_PAGES = {
 
 
 if __name__ == '__main__':
-  directory = 'docs/'
-  if not os.path.exists(directory):
-    os.makedirs(directory)
+    directory = 'docs/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
-  home = Home(about_me=ABOUT_ME, 
-              bio=BIO, 
-              publications=PUBLICATIONS,
-              ongoing_projects=ONGOING_PROJECTS,
-              courses=COURSES)
+    home = Home(
+        about_me=ABOUT_ME, 
+        bio=BIO, 
+        publications=PUBLICATIONS,
+        ongoing_projects=ONGOING_PROJECTS,
+        courses=COURSES
+    )
               
-  home.generate(directory)
-  
-  for id, project in PROJECT_PAGES.items():
-    project_path = os.path.join(directory, f'project/{id}')
-    paper = PUBLICATIONS[id]
-    project.generate(project_path, paper)
+    home.generate(directory)
+    
+    for id, project in PROJECT_PAGES.items():
+        project_path = os.path.join(directory, f'project/{id}')
+        paper = PUBLICATIONS[id]
+        project.generate(project_path, paper)
+
+    # Generate ongoing project pages
+    for ongoing_project in ONGOING_PROJECTS:
+        project_path = os.path.join(directory, f'{ongoing_project.url}')
+        ongoing_project.generate(project_path)
 
 
