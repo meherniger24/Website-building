@@ -784,7 +784,7 @@ ONGOING_PROJECTS = [
         videos=["video.mp4"]
     ), 
     OngoingProject(
-        image='data/images/thumbnails/stardist.JPG',
+        image='data/images/thumbnails/Picture1.jpg',
         title='Weak to Strong Segmentation',
         
         url = 'ongoing/pro3',
